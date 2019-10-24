@@ -21,6 +21,7 @@ load(
     "@io_bazel_rules_docker//docker/package_managers:download_pkgs.bzl",
     "download_pkgs",
 )
+load("@io_bazel_rules_docker//docker/package_managers:install_pkgs.bzl", "install_pkgs")
 
 package(default_visibility = ["//visibility:public"])
 
@@ -31,6 +32,19 @@ download_pkgs(
         "curl",
         "netbase",
     ],
+)
+
+install_pkgs(
+    name = "install",
+    image_tar = "@ubuntu1604//:ubuntu1604_vanilla.tar",
+    installables_tar = ":test_download_pkgs_at_root.tar",
+    output_image_name = "install_output",
+)
+
+file_test(
+    name = "test_install",
+    file = ":install.build",
+    regexp = "$DOCKER",
 )
 
 rule_test(
